@@ -1,0 +1,83 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: white;
+    height: 20px;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#intromap {
+    height: 500px;
+    width: 100%;
+}
+
+
+#login-signup {
+    background-color: rgb(242, 251, 255);
+    width: 100%;
+}
+
+.card {
+    text-align: center;
+    padding: 70px 30px;
+}
+
+#create-new-story {
+    background-color: rgb(56, 56, 56);
+    height: 500px;
+    width: 100%;
+}
+
+#interactivemap { 
+    height: 500px;
+    width: 100%;
+}
+
+#create-new-point {
+    background-color: rgb(238, 172, 50);
+    height: 200px;
+}
+
+#display-stories {
+    background-color: royalblue;
+    height: 200px;
+}
+
+h1 {
+    color: royalblue;
+    font-size: 36px;
+    font-weight: 200;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input {
+    margin: 5px;
+    padding: 5px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: royalblue;
+    border-width: 1.5px;
+}
+
+button, .button {
+    font-size: 14px;
+    /* color: black; */
+    color: white;
+    background-color: royalblue;
+    /* border-color: black; */
+    border-radius: 4px;
+    border-style: none;
+    margin: 5px 10px;
+    padding: 5px 15px;
+}
