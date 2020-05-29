@@ -20,21 +20,19 @@
         <nav>
             <!-- <p class="nav-button" id="create-new-story-button">Create a new story</p> -->
             <p class="nav-button" id="logoutbutton">Logout</p>
+            <p class="nav-button" id="my-stories">My Stories</p>
+            <p class="nav-button" id="view-other-stories">View Other Stories</p>
+
             <button id="sign-up-button">Sign up</button>
             <button id="login-button">Login</button>
-            <!-- <button id="logoutbutton">Logout</button> -->
         </nav>
     </header>
-    <!-- <nav>
-        <h1>StoryLines</h1>
-    </nav> -->
-    <!-- <h1>Map</h1> -->
-    <!-- <div id="intromap"></div> -->
     <div id="interactivemap"></div>
     <div id="login-signup">
         <div class="card">
             <!-- <h2>StoryLines puts <b>"where"</b> at the center of the story.</h2> -->
             <p class='error'></p>
+            <h2 id='welcome-message'>Welcome!</h2>
             <div id="Signup">
                 <form id="new-user-form">
                     <input type="text" name="first_name" placeholder="First name">
@@ -55,8 +53,11 @@
         </div>
     </div>
     <div id="create-new-point">
+        <div id="click-instructions" class="card">
+            <h2>Select your first point on the map!</h2>
+        </div>
         <div id="new-point-card" class="card">
-            <h2>Add this Point</h2>
+            <h2>Add this Point to the Story</h2>
             <form id="points-form">
                 <input type="text" name="name" placeholder="name">
                 <input type="text" name="post" placeholder="post">
@@ -79,5 +80,7 @@
             </form>
         </div>
     </div>
+    <div id="display-stories"></div>
+    <div id="display-my-stories"></div>
     </body>
 </html>

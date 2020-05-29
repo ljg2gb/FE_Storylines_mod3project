@@ -13,8 +13,10 @@ const $newStoryCard = document.querySelector('#new-story-card')
 const $interactiveMap = document.querySelector('#interactivemap')
 const $createNewPoint = document.querySelector('#create-new-point')
 const $displayStories = document.querySelector('#display-stories')
+const $displayMyStories = document.querySelector('#display-my-stories')
 const $newStoryForm = document.querySelector('#create-new-story-form')
 
+const $clickInstructions = document.querySelector('#click-instructions')
 const $pointsForm = document.querySelector('#points-form')
 const $storyDisplayDiv = document.querySelector('#story')
 // const $pointDisplayDiv = document.querySelector('#point')
@@ -23,21 +25,33 @@ const $signUpDiv = document.querySelector('#Signup')
 const $loginButton = document.querySelector('#login-button')
 const $loginDiv = document.querySelector('#Login')
 const $logoutButton = document.querySelector('#logoutbutton')
+const $myStoriesButton = document.querySelector('#my-stories')
+const $viewOtherStoriesButton = document.querySelector('#view-other-stories')
+const $welcomeMessage = document.querySelector('#welcome-message')
 
 // SPA DOM displays
 isLoggedIn()
+// displayMyStories()
+// displayStories()
 // renderIntroMap()
 
-hideOrDisplaySection($signUpDiv, 'none')
-hideOrDisplaySection($loginDiv, 'none')
 // hideOrDisplaySection($createNew, 'none')
 // hideOrDisplaySection($interactiveMap, 'none')
+
+
 hideOrDisplaySection($createNewPoint, 'none')
-
-
-$signUpButton.addEventListener('click', displaysignUpForm)
+hideOrDisplaySection($createNew, 'none')
+hideOrDisplaySection($signUpDiv, 'none')
+hideOrDisplaySection($loginDiv, 'none')
+hideOrDisplaySection($displayMyStories, 'none')
+hideOrDisplaySection($displayStories, 'none')
+$loginButton.addEventListener('click', hideWelcome)
 $loginButton.addEventListener('click', displayLoginForm)
+$signUpButton.addEventListener('click', displaysignUpForm)
+$signUpButton.addEventListener('click', hideWelcome)
 $logoutButton.addEventListener('click', logout )
+$myStoriesButton.addEventListener('click', displayMyStories)
+$viewOtherStoriesButton.addEventListener('click', displayStories)
 
 
 // SECTIONS
@@ -57,7 +71,7 @@ function makeMapClickable() {
     interactiveMap.on('click', onMapClick);
 }
 
-$pointsForm.style.display = 'none'
+// $pointsForm.style.display = 'none'
 $pointsForm.addEventListener('submit', (event => handleFormData(event)))
 
 document.getElementById('interactivemap').innerHTML = "<div id='map' style='width: 100%; height: 100%;'></div>";
@@ -73,7 +87,9 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 let points = []
 function onMapClick(e) {
-    hideOrDisplaySection($createNew, 'none')
+    hideOrDisplaySection($clickInstructions, 'none')
+    // hideOrDisplaySection($pointsForm, 'block')
+    // hideOrDisplaySection($createNew, 'none')
     const point = [e.latlng.lat, e.latlng.lng]
     points.push(point)
     displayForm(point)
@@ -83,6 +99,7 @@ function onMapClick(e) {
 function displayAllPointsOnMap(point) {
     L.marker(point).addTo(interactiveMap)
 }
+
 
 // login-signup
 function displaysignUpForm() {
@@ -96,6 +113,10 @@ function displayLoginForm() {
     $loginDiv.style.display = 'block'
     $loginDiv.addEventListener('submit', handleLogin)
     $loginDiv.addEventListener('submit', hideOrDisplaySection($createNew, 'block'))
+}
+
+function hideWelcome() {
+    $welcomeMessage.style.display = 'none'
 }
 
 function handleLogin(event) {
@@ -118,10 +139,39 @@ function handleLogin(event) {
     // .then(displayUserStories)
 }
 
+function handleSignUp(event) {
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const first_name = formData.get('first_name')
+    const last_name = formData.get('last_name')
+    const email = formData.get('email')
+    const username = formData.get('username')
+    const password = formData.get('password')
+    const user = { "user": {first_name, last_name, email, username, password}}
+    console.log('user', user)
+    
+    fetchCall(usersURL, 'POST', user)
+    .then(handleFetchResponse)
+    .then(displayLoginForm)
+    // .catch(handleNetworkError)
+
+}
+
 // create-new-story
 $newStoryForm.addEventListener('submit', handleNewStoryForm)
 $newStoryForm.addEventListener('submit', makeMapClickable)
-$newStoryForm.addEventListener('submit', hideOrDisplaySection($createNew, 'none'))
+$newStoryForm.addEventListener('submit', hideNewStorySection)
+$newStoryForm.addEventListener('submit', displayAddPointInstruction)
+// $newStoryForm.addEventListener('submit', hideOrDisplaySection($createNew, 'none'))
+
+function hideNewStorySection() {
+    $createNew.style.display = 'none'
+}
+
+function displayAddPointInstruction() {
+    $createNewPoint.style.display = 'block'
+    $newPointsCard.style.display = 'none'
+}
 
 function handleNewStoryForm(event) {
     console.log('eventListenerWorking')
@@ -141,6 +191,8 @@ function handleNewStoryForm(event) {
     
 }
 function NewStoryData(data) {
+    const $h2 = document.createElement('h2')
+    $h2.textContent = 'Your Story:'
     const $div = document.createElement('div')
     $div.className = "card"
     $div.id = "story"
@@ -153,17 +205,19 @@ function NewStoryData(data) {
     const date = document.createElement('p')
     date.textContent = data.date
     $div.append(title, description, date)
-    $newStoryInfo.append($div)
+    $newStoryInfo.append($h2, $div)
 }
 
 
 
-
+// POINTS
 function displayForm(point) {
-    $createNewPoint.style.display = 'block'
-    $pointsForm.style.display = 'block'
+    // $createNewPoint.style.display = 'block'
+    $newPointsCard.style.display = 'block'
     document.querySelector("#pre-populate-story_id-value").value = localStorage.getItem("story_id")
     document.querySelector("#pre-populate-location-value").value = point
+    // $pointsForm.addEventListener('submit', hideOrDisplaySection($clickInstructions, 'block'))
+    // $pointsForm.addEventListener('submit', hideOrDisplaySection($pointsForm, 'none'))
 }
 
 function handleFormData(event) {
@@ -204,22 +258,42 @@ function fetchPostPoints(pointBody) {
         .then(console.log)
 }
 
+
+// display Stories!
+function displayStories() {
+    $displayStories.style.display ='block'
+    console.log('displayStoriesOn')
+}
+
+function displayMyStories(){
+    $displayMyStories.style.display ='block'
+    console.log('displayMyStoriesOn')
+}
+
 // helper functions
 function isLoggedIn() {
     if (localStorage.getItem('token')){
         hideOrDisplaySection($logoutButton, 'block')
+        hideOrDisplaySection($myStoriesButton, 'block')
+        hideOrDisplaySection($viewOtherStoriesButton, 'none')
+        hideOrDisplaySection($displayStories, 'none')
         hideOrDisplaySection($signUpButton, 'none')
         hideOrDisplaySection($loginButton, 'none')
         hideOrDisplaySection($loginSignup, 'none')
+        // displayMyStories()
         // hideOrDisplaySection($createNew, 'block')
         // hideOrDisplaySection($newStoryForm, 'block')
     } 
     else {
         hideOrDisplaySection($logoutButton, 'none')
+        hideOrDisplaySection($myStoriesButton, 'none')
+        hideOrDisplaySection($viewOtherStoriesButton, 'block')
+        hideOrDisplaySection($displayMyStories, 'none')
         hideOrDisplaySection($signUpButton, 'block')
         hideOrDisplaySection($loginButton, 'block')
         hideOrDisplaySection($loginSignup, 'block')
         hideOrDisplaySection($createNew, 'none')
+        // displayStories()
         // hideOrDisplaySection($newStoryCard, 'none')
     }
 }
