@@ -36,8 +36,9 @@ nav {
 
 
 #login-signup {
-    background-color: rgb(242, 251, 255);
+    background-color: white;
     width: 100%;
+    /* min-height: 300px; */
 }
 
 .card {
@@ -45,9 +46,10 @@ nav {
     padding: 70px 30px;
 }
 
+
 #create-new-story {
     background-color: rgb(242, 251, 255);
-    height: 500px;
+    /* height: 500px; */
     width: 100%;
 }
 
@@ -55,6 +57,27 @@ nav {
     /* display: none; */
     height: 500px;
     width: 100%;
+}
+
+#new-story-info {
+    background-color: rgb(242, 251, 255);
+    /* height: 200px; */
+    display: flex;
+    flex-wrap: wrap;
+}
+#story.card {
+    background-color: skyblue;
+    margin: 2.5%;
+    width: 15%;
+}
+
+#point.card {
+    background-color: white;
+    margin: 2.5%;
+    width: 15%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 #create-new-point {

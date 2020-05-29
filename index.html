@@ -18,8 +18,10 @@
     <header>
         <h1>StoryLines</h1>
         <nav>
-            <p class="nav-button" id="create-new-story-button">Create a new story</p>
+            <!-- <p class="nav-button" id="create-new-story-button">Create a new story</p> -->
             <p class="nav-button" id="logoutbutton">Logout</p>
+            <button id="sign-up-button">Sign up</button>
+            <button id="login-button">Login</button>
             <!-- <button id="logoutbutton">Logout</button> -->
         </nav>
     </header>
@@ -27,12 +29,11 @@
         <h1>StoryLines</h1>
     </nav> -->
     <!-- <h1>Map</h1> -->
-    <div id="intromap"></div>
+    <!-- <div id="intromap"></div> -->
+    <div id="interactivemap"></div>
     <div id="login-signup">
         <div class="card">
             <!-- <h2>StoryLines puts <b>"where"</b> at the center of the story.</h2> -->
-            <button id="sign-up-button">Sign up</button>
-            <button id="login-button">Login</button>
             <p class='error'></p>
             <div id="Signup">
                 <form id="new-user-form">
@@ -53,8 +54,21 @@
             </div>
         </div>
     </div>
+    <div id="create-new-point">
+        <div id="new-point-card" class="card">
+            <h2>Add this Point</h2>
+            <form id="points-form">
+                <input type="text" name="name" placeholder="name">
+                <input type="text" name="post" placeholder="post">
+                <input id="pre-populate-location-value" type="text" name="latlng" readonly>
+                <input id="pre-populate-story_id-value" type="hidden" name="story_id" readonly>
+                <input class="button" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+    <div id="new-story-info"></div> 
     <div id="create-new-story">
-        <div class="card">
+        <div id="new-story-card" class="card">
             <h2>Create a Story</h2>
             <form id="create-new-story-form">
                 <input type="text" name="title" placeholder="Title">
@@ -65,22 +79,5 @@
             </form>
         </div>
     </div>
-    <div id="displayNewStoryInfo"></div>
-    <div id="interactivemap"></div>
-    <div id="create-new-point">
-        <div class="card">
-            <h2>Add a Point</h2>
-            <form id="points-form">
-                <input type="text" name="name" placeholder="name">
-                <input type="text" name="post" placeholder="post">
-                <input id="pre-populate-location-value" type="text" name="latlng" readonly>
-                <input type="hidden" name="story_id" value="1">
-                <input class="button" type="submit" value="Submit">
-            </form>
-        </div>
-    </div>
-    <div id="display-stories"></div>
-
-    
-</body>
+    </body>
 </html>

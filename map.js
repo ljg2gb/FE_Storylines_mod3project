@@ -6,12 +6,18 @@ const storiesURL = 'http://localhost:3000/stories'
 
 const $loginSignup = document.querySelector('#login-signup')
 const $createNew = document.querySelector('#create-new-story')
+const $newStoryInfo = document.querySelector('#new-story-info')
+const $newPointsCard = document.querySelector('#new-point-card')
+const $newStoryCard = document.querySelector('#new-story-card')
+
 const $interactiveMap = document.querySelector('#interactivemap')
 const $createNewPoint = document.querySelector('#create-new-point')
 const $displayStories = document.querySelector('#display-stories')
 const $newStoryForm = document.querySelector('#create-new-story-form')
 
 const $pointsForm = document.querySelector('#points-form')
+const $storyDisplayDiv = document.querySelector('#story')
+// const $pointDisplayDiv = document.querySelector('#point')
 const $signUpButton = document.querySelector('#sign-up-button')
 const $signUpDiv = document.querySelector('#Signup')
 const $loginButton = document.querySelector('#login-button')
@@ -20,7 +26,7 @@ const $logoutButton = document.querySelector('#logoutbutton')
 
 // SPA DOM displays
 isLoggedIn()
-renderIntroMap()
+// renderIntroMap()
 
 hideOrDisplaySection($signUpDiv, 'none')
 hideOrDisplaySection($loginDiv, 'none')
@@ -35,18 +41,47 @@ $logoutButton.addEventListener('click', logout )
 
 
 // SECTIONS
-// intromap
-function renderIntroMap() {
-    const intromap = L.map('intromap', { scrollWheelZoom: false }).setView([51.505, -0.09], 2);
-
+// interactivemap
+function makeMapClickable() {
+    if (interactiveMap != undefined) { interactiveMap.remove()}
+    // document.getElementById('interactivemap').innerHTML = "<div id='map' style='width: 100%; height: 100%;'></div>";
+    interactiveMap = L.map('interactivemap').setView([51.505, -0.09], 2)
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/streets-v11',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'pk.eyJ1IjoibGpnMmdiIiwiYSI6ImNrYW1xeHE4YzFoNncyeWw2NW83c3N4MDUifQ.qSHmG5Ee_suJ1KNUNHmxZQ'
-    }).addTo(intromap);
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoibGpnMmdiIiwiYSI6ImNrYW1xeHE4YzFoNncyeWw2NW83c3N4MDUifQ.qSHmG5Ee_suJ1KNUNHmxZQ'
+}).addTo(interactiveMap);
+    interactiveMap.on('click', onMapClick);
+}
+
+$pointsForm.style.display = 'none'
+$pointsForm.addEventListener('submit', (event => handleFormData(event)))
+
+document.getElementById('interactivemap').innerHTML = "<div id='map' style='width: 100%; height: 100%;'></div>";
+let interactiveMap = L.map('interactivemap', { scrollWheelZoom: false }).setView([51.505, -0.09], 2);
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoibGpnMmdiIiwiYSI6ImNrYW1xeHE4YzFoNncyeWw2NW83c3N4MDUifQ.qSHmG5Ee_suJ1KNUNHmxZQ'
+}).addTo(interactiveMap);
+
+let points = []
+function onMapClick(e) {
+    hideOrDisplaySection($createNew, 'none')
+    const point = [e.latlng.lat, e.latlng.lng]
+    points.push(point)
+    displayForm(point)
+    points.forEach(displayAllPointsOnMap)
+}
+
+function displayAllPointsOnMap(point) {
+    L.marker(point).addTo(interactiveMap)
 }
 
 // login-signup
@@ -60,6 +95,7 @@ function displayLoginForm() {
     $signUpDiv.style.display = 'none'
     $loginDiv.style.display = 'block'
     $loginDiv.addEventListener('submit', handleLogin)
+    $loginDiv.addEventListener('submit', hideOrDisplaySection($createNew, 'block'))
 }
 
 function handleLogin(event) {
@@ -84,7 +120,8 @@ function handleLogin(event) {
 
 // create-new-story
 $newStoryForm.addEventListener('submit', handleNewStoryForm)
-$newStoryForm.addEventListener('submit', hideOrDisplaySection($interactiveMap, 'block'))
+$newStoryForm.addEventListener('submit', makeMapClickable)
+$newStoryForm.addEventListener('submit', hideOrDisplaySection($createNew, 'none'))
 
 function handleNewStoryForm(event) {
     console.log('eventListenerWorking')
@@ -104,45 +141,29 @@ function handleNewStoryForm(event) {
     
 }
 function NewStoryData(data) {
+    const $div = document.createElement('div')
+    $div.className = "card"
+    $div.id = "story"
     const story_id = data.id
-    const title = data.title
-    console.log(story_id)
+    localStorage.setItem("story_id", story_id)
+    const title = document.createElement('h3')
+    title.textContent = data.title
+    const description = document.createElement('p')
+    description.textContent = data.description
+    const date = document.createElement('p')
+    date.textContent = data.date
+    $div.append(title, description, date)
+    $newStoryInfo.append($div)
 }
 
 
 
-// points
-$pointsForm.style.display = 'none'
-$pointsForm.addEventListener('submit', (event => handleFormData(event)))
-
-
-const mymap = L.map('interactivemap').setView([51.505, -0.09], 2);
-L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    tileSize: 512,
-    zoomOffset: -1,
-    accessToken: 'pk.eyJ1IjoibGpnMmdiIiwiYSI6ImNrYW1xeHE4YzFoNncyeWw2NW83c3N4MDUifQ.qSHmG5Ee_suJ1KNUNHmxZQ'
-}).addTo(mymap);
-mymap.on('click', onMapClick);
-
-let points = []
-function onMapClick(e) {
-    const point = [e.latlng.lat, e.latlng.lng]
-    points.push(point)
-    displayForm(point)
-    points.forEach(displayAllPointsOnMap)
-}
-
-function displayAllPointsOnMap(point) {
-    L.marker(point).addTo(mymap)
-}
 
 function displayForm(point) {
     $createNewPoint.style.display = 'block'
     $pointsForm.style.display = 'block'
-    document.getElementById("pre-populate-location-value").value = point
+    document.querySelector("#pre-populate-story_id-value").value = localStorage.getItem("story_id")
+    document.querySelector("#pre-populate-location-value").value = point
 }
 
 function handleFormData(event) {
@@ -153,17 +174,19 @@ function handleFormData(event) {
     const latlng = formData.get('latlng')
     const story_id = formData.get('story_id')
     const pointBody = {name, post, latlng, story_id}
-    displayFormInput(pointBody)
+    displayPointsFormInput(pointBody)
     fetchPostPoints(pointBody)
 }
 
-function displayFormInput(pointBody) {
+function displayPointsFormInput(pointBody) {
     const $div = document.createElement('div')
+    $div.className = "card"
+    $div.id = "point"
     $div.innerHTML = `
     <h3>${pointBody.name}</h3>
     <p>${pointBody.post}</p>
     <p>${pointBody.latlng}</p>`
-    document.body.append($div)
+    $newStoryInfo.append($div)
     // console.log(pointBody.name)
 
 }
@@ -184,15 +207,20 @@ function fetchPostPoints(pointBody) {
 // helper functions
 function isLoggedIn() {
     if (localStorage.getItem('token')){
-        $logoutButton.style.display = 'block'
+        hideOrDisplaySection($logoutButton, 'block')
+        hideOrDisplaySection($signUpButton, 'none')
+        hideOrDisplaySection($loginButton, 'none')
         hideOrDisplaySection($loginSignup, 'none')
-        hideOrDisplaySection($createNew, 'block')
-        // displayMap(latitude, longitude, zoom)
+        // hideOrDisplaySection($createNew, 'block')
+        // hideOrDisplaySection($newStoryForm, 'block')
     } 
     else {
-        $logoutButton.style.display = 'none'
+        hideOrDisplaySection($logoutButton, 'none')
+        hideOrDisplaySection($signUpButton, 'block')
+        hideOrDisplaySection($loginButton, 'block')
         hideOrDisplaySection($loginSignup, 'block')
         hideOrDisplaySection($createNew, 'none')
+        // hideOrDisplaySection($newStoryCard, 'none')
     }
 }
 
