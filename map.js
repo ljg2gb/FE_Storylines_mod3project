@@ -9,28 +9,29 @@ const $createNew = document.querySelector('#create-new-story')
 const $interactiveMap = document.querySelector('#interactivemap')
 const $createNewPoint = document.querySelector('#create-new-point')
 const $displayStories = document.querySelector('#display-stories')
+const $newStoryForm = document.querySelector('#create-new-story-form')
 
 const $pointsForm = document.querySelector('#points-form')
 const $signUpButton = document.querySelector('#sign-up-button')
 const $signUpDiv = document.querySelector('#Signup')
 const $loginButton = document.querySelector('#login-button')
 const $loginDiv = document.querySelector('#Login')
+const $logoutButton = document.querySelector('#logoutbutton')
 
 // SPA DOM displays
-hideOrDisplaySection($loginSignup, 'block')
+isLoggedIn()
+renderIntroMap()
+
 hideOrDisplaySection($signUpDiv, 'none')
 hideOrDisplaySection($loginDiv, 'none')
-hideOrDisplaySection($createNew, 'none')
-hideOrDisplaySection($interactiveMap, 'none')
+// hideOrDisplaySection($createNew, 'none')
+// hideOrDisplaySection($interactiveMap, 'none')
 hideOrDisplaySection($createNewPoint, 'none')
 
-// hideOrDisplaySection($intromap, 'block')
-
-renderIntroMap()
 
 $signUpButton.addEventListener('click', displaysignUpForm)
 $loginButton.addEventListener('click', displayLoginForm)
-
+$logoutButton.addEventListener('click', logout )
 
 
 // SECTIONS
@@ -82,6 +83,32 @@ function handleLogin(event) {
 }
 
 // create-new-story
+$newStoryForm.addEventListener('submit', handleNewStoryForm)
+$newStoryForm.addEventListener('submit', hideOrDisplaySection($interactiveMap, 'block'))
+
+function handleNewStoryForm(event) {
+    console.log('eventListenerWorking')
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const title = formData.get('title')
+    const description = formData.get('description')
+    const date = formData.get('date')
+    const status = formData.get('status')
+    const user_id = localStorage.getItem("user_id")
+    const newStoryBody = {title, description, date, status, user_id}
+
+    fetchCall(storiesURL, 'POST', newStoryBody, 'auth')
+        .then(parseJson)
+        .then(NewStoryData)
+    // add a function that sets title,decription,date,etc to the page next to interactive map
+    
+}
+function NewStoryData(data) {
+    const story_id = data.id
+    const title = data.title
+    console.log(story_id)
+}
+
 
 
 // points
@@ -113,6 +140,7 @@ function displayAllPointsOnMap(point) {
 }
 
 function displayForm(point) {
+    $createNewPoint.style.display = 'block'
     $pointsForm.style.display = 'block'
     document.getElementById("pre-populate-location-value").value = point
 }
@@ -157,15 +185,21 @@ function fetchPostPoints(pointBody) {
 function isLoggedIn() {
     if (localStorage.getItem('token')){
         $logoutButton.style.display = 'block'
-        hideOrDisplaySection($welcomeSection, 'none')
-        hideOrDisplaySection($CreateNewStorySection, 'block')
+        hideOrDisplaySection($loginSignup, 'none')
+        hideOrDisplaySection($createNew, 'block')
         // displayMap(latitude, longitude, zoom)
     } 
     else {
         $logoutButton.style.display = 'none'
-        hideOrDisplaySection($welcomeSection, 'block')
-        hideOrDisplaySection($CreateNewStorySection, 'none')
+        hideOrDisplaySection($loginSignup, 'block')
+        hideOrDisplaySection($createNew, 'none')
     }
+}
+
+function logout() {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user_id")
+    isLoggedIn()
 }
 
 function hideOrDisplaySection(section, characteristic){
@@ -174,4 +208,27 @@ function hideOrDisplaySection(section, characteristic){
 
 function parseJson(response) {
     return response.json()
+}
+
+function fetchCall(url, method, data, auth) {
+    const headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+    if (auth) {
+        headers["Authorization"] = `Bearer ${localStorage.token}`
+    }
+    const body = JSON.stringify(data)
+    return fetch(url, { method, headers, body })
+  }
+
+  function handleFetchResponse(response) {
+    console.log('we got a response from the backend', response)
+    if (!response.ok) {
+        console.log("error!")
+        // $error.textContent = errorMessages[response.status]
+    }
+    else {
+        parseJson(response)
+    }
 }

@@ -15,9 +15,17 @@
     crossorigin=""></script>
 </head>
 <body>
-    <nav>
-        <h1>Storylines</h1>
-    </nav>
+    <header>
+        <h1>StoryLines</h1>
+        <nav>
+            <p class="nav-button" id="create-new-story-button">Create a new story</p>
+            <p class="nav-button" id="logoutbutton">Logout</p>
+            <!-- <button id="logoutbutton">Logout</button> -->
+        </nav>
+    </header>
+    <!-- <nav>
+        <h1>StoryLines</h1>
+    </nav> -->
     <!-- <h1>Map</h1> -->
     <div id="intromap"></div>
     <div id="login-signup">
@@ -45,16 +53,31 @@
             </div>
         </div>
     </div>
-    <div id="create-new-story"></div>
+    <div id="create-new-story">
+        <div class="card">
+            <h2>Create a Story</h2>
+            <form id="create-new-story-form">
+                <input type="text" name="title" placeholder="Title">
+                <input type="text" name="description" placeholder="Description">
+                <input type="text" name="date" placeholder="Date">
+                <input type="hidden" name="status" value="public">
+                <input class="button" type="submit" value="Add points to map">
+            </form>
+        </div>
+    </div>
+    <div id="displayNewStoryInfo"></div>
     <div id="interactivemap"></div>
     <div id="create-new-point">
-        <form id="points-form">
-            <input type="text" name="name" placeholder="name">
-            <input type="text" name="post" placeholder="post">
-            <input id="pre-populate-location-value" type="text" name="latlng" readonly>
-            <input type="hidden" name="story_id" value="1">
-            <input class="button" type="submit" value="Add this point">
-        </form>
+        <div class="card">
+            <h2>Add a Point</h2>
+            <form id="points-form">
+                <input type="text" name="name" placeholder="name">
+                <input type="text" name="post" placeholder="post">
+                <input id="pre-populate-location-value" type="text" name="latlng" readonly>
+                <input type="hidden" name="story_id" value="1">
+                <input class="button" type="submit" value="Submit">
+            </form>
+        </div>
     </div>
     <div id="display-stories"></div>
 

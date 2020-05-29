@@ -4,6 +4,17 @@ body {
     padding: 0;
 }
 
+
+header {
+    background-color: white;
+    margin: 0;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+}
+
 nav {
     background-color: white;
     height: 20px;
@@ -11,6 +22,11 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.nav-button {
+    text-decoration: underline;
+    margin: 15px;
 }
 
 #intromap {
@@ -30,18 +46,19 @@ nav {
 }
 
 #create-new-story {
-    background-color: rgb(56, 56, 56);
+    background-color: rgb(242, 251, 255);
     height: 500px;
     width: 100%;
 }
 
 #interactivemap { 
+    /* display: none; */
     height: 500px;
     width: 100%;
 }
 
 #create-new-point {
-    background-color: rgb(238, 172, 50);
+    background-color: rgb(242, 251, 255);
     height: 200px;
 }
 
