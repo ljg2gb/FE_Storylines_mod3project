@@ -80,6 +80,18 @@ nav {
     width: 100%;
 }
 
+#story.card h3 {
+    font-size: 60px;
+    font-weight: 300;
+    color: white;
+}
+
+#story.card p {
+    /* margin: 40px; */
+    font-weight: 300;
+    color: white;
+}
+
 #point.card {
     background-color: white;
     margin: 40px;
@@ -95,14 +107,39 @@ nav {
 }
 
 #display-stories {
-    /* margin: 0; */
-    background-color: red;
-    height: 200px;
+    /* margin: 40px; */
+    background-color:rgb(242, 251, 255);
+    padding: 40px;
+    min-height: 200px;
+}
+
+#display-stories div {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+#display-stories h2 {
+    margin: 40px;
+    font-weight: 300;
+    color: royalblue;
+}
+
+#display-my-stories h2 {
+    margin: 40px;
+    font-weight: 300;
+    color: royalblue;
 }
 
 #display-my-stories {
-    background-color: yellow;
-    height: 200px;
+    background-color:rgb(242, 251, 255);
+    padding: 40px;
+    min-height: 200px;
+}
+
+#display-my-stories div {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 30px;
 }
 
 #welcome-message {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MVP</title>
+    <title>Storylines</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
@@ -18,10 +18,10 @@
     <header>
         <h1>StoryLines</h1>
         <nav>
-            <!-- <p class="nav-button" id="create-new-story-button">Create a new story</p> -->
             <p class="nav-button" id="logoutbutton">Logout</p>
+            <p class="nav-button" id="create-new-story-button">Create New Story</p>
             <p class="nav-button" id="my-stories">My Stories</p>
-            <p class="nav-button" id="view-other-stories">View Other Stories</p>
+            <p class="nav-button" id="view-other-stories">View Stories</p>
 
             <button id="sign-up-button">Sign up</button>
             <button id="login-button">Login</button>
@@ -80,7 +80,11 @@
             </form>
         </div>
     </div>
-    <div id="display-stories"></div>
-    <div id="display-my-stories"></div>
+    <div id="display-stories">
+        <h2>User Storylines</h2>
+    </div>
+    <div id="display-my-stories">
+        <h2>My Storylines</h2>
+    </div>
     </body>
 </html>

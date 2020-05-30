@@ -27,6 +27,7 @@ const $loginDiv = document.querySelector('#Login')
 const $logoutButton = document.querySelector('#logoutbutton')
 const $myStoriesButton = document.querySelector('#my-stories')
 const $viewOtherStoriesButton = document.querySelector('#view-other-stories')
+const $createNewStoryButton = document.querySelector('#create-new-story-button')
 const $welcomeMessage = document.querySelector('#welcome-message')
 
 // SPA DOM displays
@@ -45,12 +46,13 @@ hideOrDisplaySection($signUpDiv, 'none')
 hideOrDisplaySection($loginDiv, 'none')
 hideOrDisplaySection($displayMyStories, 'none')
 hideOrDisplaySection($displayStories, 'none')
+hideOrDisplaySection($createNewStoryButton, 'none')
 $loginButton.addEventListener('click', hideWelcome)
 $loginButton.addEventListener('click', displayLoginForm)
 $signUpButton.addEventListener('click', displaysignUpForm)
 $signUpButton.addEventListener('click', hideWelcome)
 $logoutButton.addEventListener('click', logout )
-$myStoriesButton.addEventListener('click', displayMyStories)
+// $myStoriesButton.addEventListener('click', displayMyStories)
 $viewOtherStoriesButton.addEventListener('click', displayStories)
 
 
@@ -72,7 +74,7 @@ function makeMapClickable() {
 }
 
 // $pointsForm.style.display = 'none'
-$pointsForm.addEventListener('submit', (event => handleFormData(event)))
+$pointsForm.addEventListener('submit', handleNewPointFormData)
 
 document.getElementById('interactivemap').innerHTML = "<div id='map' style='width: 100%; height: 100%;'></div>";
 let interactiveMap = L.map('interactivemap', { scrollWheelZoom: false }).setView([51.505, -0.09], 2);
@@ -162,6 +164,7 @@ $newStoryForm.addEventListener('submit', handleNewStoryForm)
 $newStoryForm.addEventListener('submit', makeMapClickable)
 $newStoryForm.addEventListener('submit', hideNewStorySection)
 $newStoryForm.addEventListener('submit', displayAddPointInstruction)
+$newStoryForm.addEventListener('submit', displayCreateNewPostButton)
 // $newStoryForm.addEventListener('submit', hideOrDisplaySection($createNew, 'none'))
 
 function hideNewStorySection() {
@@ -171,6 +174,10 @@ function hideNewStorySection() {
 function displayAddPointInstruction() {
     $createNewPoint.style.display = 'block'
     $newPointsCard.style.display = 'none'
+}
+
+function displayCreateNewPostButton() {
+    $createNewStoryButton.style.display = 'block'
 }
 
 function handleNewStoryForm(event) {
@@ -220,7 +227,7 @@ function displayForm(point) {
     // $pointsForm.addEventListener('submit', hideOrDisplaySection($pointsForm, 'none'))
 }
 
-function handleFormData(event) {
+function handleNewPointFormData(event) {
     event.preventDefault()
     const formData = new FormData(event.target)
     const name = formData.get('name')
@@ -229,7 +236,7 @@ function handleFormData(event) {
     const story_id = formData.get('story_id')
     const pointBody = {name, post, latlng, story_id}
     displayPointsFormInput(pointBody)
-    fetchPostPoints(pointBody)
+    // fetchPostPoints(pointBody)
 }
 
 function displayPointsFormInput(pointBody) {
@@ -254,20 +261,49 @@ function fetchPostPoints(pointBody) {
         },
         body: JSON.stringify (pointBody)
     })
-        .then(response => response.json())
+        .then(parseJson)
         .then(console.log)
 }
 
 
 // display Stories!
+
 function displayStories() {
     $displayStories.style.display ='block'
-    console.log('displayStoriesOn')
+    fetch(storiesURL)
+        .then(parseJson)
+        .then(result => result.forEach(displayUserStory))
 }
 
 function displayMyStories(){
     $displayMyStories.style.display ='block'
     console.log('displayMyStoriesOn')
+    // fetch(storiesURL)
+    //     .then(parseJson)
+    //     .then(result => result.forEach(displayUserStory))
+}
+
+function displayUserStory(story) {
+    console.log(story)
+    $displayStories.append(createAndSetStoryCard(story))
+}
+
+function createAndSetStoryCard(story) {
+    // if (localStorage.getItem('token')){
+    //     const $usersstories = (story.user_id == localStorage.getItem("user_id"))
+    //     story.select($usersstories)
+    // }
+    // else {
+    const $storyCard = document.createElement('div')
+    $storyCard.className = "story-card"
+    $storyCard.innerHTML = `
+    <h1>${story.title}</h1>
+    <p>${story.description}</p>
+    <p>${story.date}</p>
+    <button>View story on map</button>
+    ` 
+    return $storyCard
+    // }
 }
 
 // helper functions
