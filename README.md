@@ -1,5 +1,5 @@
 # Storylines
-![](/Accountabilibuddies.png)
+![](/Storylines.png)
 
 ## General Info
 
