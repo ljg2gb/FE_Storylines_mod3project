@@ -32,13 +32,6 @@ const $welcomeMessage = document.querySelector('#welcome-message')
 
 // SPA DOM displays
 isLoggedIn()
-// displayMyStories()
-// displayStories()
-// renderIntroMap()
-
-// hideOrDisplaySection($createNew, 'none')
-// hideOrDisplaySection($interactiveMap, 'none')
-
 
 hideOrDisplaySection($createNewPoint, 'none')
 hideOrDisplaySection($createNew, 'none')
@@ -236,6 +229,7 @@ function handleNewPointFormData(event) {
     const story_id = formData.get('story_id')
     const pointBody = {name, post, latlng, story_id}
     displayPointsFormInput(pointBody)
+    event.target.reset()
     // fetchPostPoints(pointBody)
 }
 
